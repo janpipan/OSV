@@ -58,10 +58,19 @@ def displayHistogram(iHist, iLevels, iTitle):
     plt.ylim((0, 1.05*iHist.max()))
     plt.show()
 
+def computeEntropy(iImage):
+    oEntropy = 0
+    h, p, cdf, l = computeHistogram(iImage)
+    for i in range(len(p)):
+        if p[i] != 0.0:
+            sum += p[i]
+            oEntropy += p[i] * np.log2(p[i])
+    return oEntropy * -1
+
     
 
 if __name__ == '__main__':
-    image = loadImage("./vaja2/data/valley-1024x683-08bit.raw", (1024,683), np.uint8)
+    """ image = loadImage("./vaja2/data/valley-1024x683-08bit.raw", (1024,683), np.uint8)
     h, p, cdf ,l = computeHistogram(image)
     displayHistogram(h,l,'Histogram')
     displayHistogram(p,l, 'Prob')
@@ -72,6 +81,31 @@ if __name__ == '__main__':
     displayHistogram(h1,l1,'Histogram izravnan')
     displayHistogram(p1,l1, 'Prob izravanan')
     displayHistogram(cdf1, l1, 'cdf izravnan')
-    displayImage(equalizeHistogram(image), 'izravnan historgram')
-    #print(histogram)
-    #displayHistogram(histogram[0], histogram[], 'histogram')
+    displayImage(equalizeHistogram(image), 'izravnan historgram') """
+    image = loadImage("./vaja2/data/valley-1024x683-08bit.raw", (1024,683), np.uint8)
+    # 1. Vprašanje
+    h, p, cdf, l = computeHistogram(image)
+    displayImage(image,'Začetna slika')
+    displayHistogram(h, l, 'Histogram začetne slike')
+    displayHistogram(p, l, 'Normaliziran histogram začetne slike')
+    displayHistogram(cdf, l, 'Histogram kumulativne porazdelitve verjetnosti sivinskih vrednosti začetne slike')
+    print("Kakšne lastnosti ima histogram dane slike?")
+    print("Odg: ")
+
+    # 2. Vprašanje
+    equalizedImage = equalizeHistogram(image)
+    h1, p1, cdf1, l1 = computeHistogram(equalizedImage)
+    displayImage(equalizedImage, 'Slika z izravnanim histogramom')
+    displayHistogram(h1, l1, 'Histogram slike z izravnanim histogramom')
+    displayHistogram(p1, l1, 'Normaliziran histogram slike z izravnanim histogramom')
+    displayHistogram(cdf1, l1, 'Histogram kumulativne porazdelitve verjetnosti sivinskih vrednosti slike z izravnanim histogramom')
+    print("Kakšne lastnosti ima histogram in kakšne kumulativna porazdelitev verjetnosti sivinskih vrednosti slike z izravnanim histogramom?")
+    print("Odg: ")
+
+    # 3. Vprašanje
+    entropyOriginal = computeEntropy(image)
+    print(entropyOriginal)
+
+    entropyEqualized = computeEntropy(equalizedImage)
+    print(entropyEqualized)
+
