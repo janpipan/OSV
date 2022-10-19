@@ -37,24 +37,32 @@ def displayImage(iImage, iTitle):
 
 # funkcija ki piše v raw format
 def saveImage(iImage, iPath, iType):
-    pass
+    oFile = open(iPath, 'wb')
+    oFile.write(iImage.tobytes(order="F"))
+    oFile.close() 
     
 if __name__ == '__main__':
     picture = plt.imread("./vaja1/data/lena-color.png")
 
     # Naloga 1
-    print(picture.shape)
+    #print(picture.shape)
 
     #plt.figure()
 
     #plt.imshow(picture)
 
-    #plt.imsave('./data/lena.jpeg', picture)
+    #plt.imsave('./vaja1/data/lena.jpeg', picture)
 
 
     raw_img = './vaja1/data/lena-gray-410x512-08bit.raw'
 
     lena_gray= loadImage(raw_img, (410,512), np.uint8)
+
+    displayImage(lena_gray, 'Lena gray')
+
+    saveImage(lena_gray,'./vaja1/data/lena-gray.raw', np.uint8)
+
+
 
     #plt.figure()
     #plt.imshow(lena_grey, cmap='gray')
@@ -67,5 +75,11 @@ if __name__ == '__main__':
 
     displayImage(lena_color, 'Lena color')
 
-    displayImage(lena_gray, 'Lena gray')
+    
+
+    lena_gray_raw_path = './vaja1/data/lena-gray.raw'
+
+    lena_gray_raw = loadImage(lena_gray_raw_path, (410,512), np.uint8)
+
+    displayImage(lena_gray_raw,"lena gray raw")
 

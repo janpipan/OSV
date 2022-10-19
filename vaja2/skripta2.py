@@ -61,9 +61,9 @@ def displayHistogram(iHist, iLevels, iTitle):
 def computeEntropy(iImage):
     oEntropy = 0
     h, p, cdf, l = computeHistogram(iImage)
+    displayHistogram(cdf,l,"")
     for i in range(len(p)):
         if p[i] != 0.0:
-            sum += p[i]
             oEntropy += p[i] * np.log2(p[i])
     return oEntropy * -1
 
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     displayHistogram(p, l, 'Normaliziran histogram začetne slike')
     displayHistogram(cdf, l, 'Histogram kumulativne porazdelitve verjetnosti sivinskih vrednosti začetne slike')
     print("Kakšne lastnosti ima histogram dane slike?")
-    print("Odg: ")
+    print("Odg: Histogram prikazuje, da ima večina pixlov na sliki sivinske vrednosti v območju od 120 do 180 ")
 
     # 2. Vprašanje
     equalizedImage = equalizeHistogram(image)
@@ -100,12 +100,12 @@ if __name__ == '__main__':
     displayHistogram(p1, l1, 'Normaliziran histogram slike z izravnanim histogramom')
     displayHistogram(cdf1, l1, 'Histogram kumulativne porazdelitve verjetnosti sivinskih vrednosti slike z izravnanim histogramom')
     print("Kakšne lastnosti ima histogram in kakšne kumulativna porazdelitev verjetnosti sivinskih vrednosti slike z izravnanim histogramom?")
-    print("Odg: ")
+    print("Odg: Histogram slike z izravnanim histogramom ima sivinske vrednosti razporejene po celotnem dinamičnem območju. V primerjavi z histogramom začetne slike je histogram slike z izravnanim histogramom enake oblike vendar so sivinske vrednosti razpršene čez celotno dinamično območje. Histgoram kumulativne porazdelitve verjetnosti sivinskih vrednosti slike z izravnanim histogramom je ")
 
     # 3. Vprašanje
     entropyOriginal = computeEntropy(image)
-    print(entropyOriginal)
+    print("Entropija začetne slike: ",entropyOriginal)
 
     entropyEqualized = computeEntropy(equalizedImage)
-    print(entropyEqualized)
+    print("Entropija slike z izravnanim histogramom: ",entropyEqualized)
 
