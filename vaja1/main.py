@@ -71,8 +71,6 @@ if __name__ == '__main__':
 
     lena_color = loadImage(lena_color_path, (512,410), np.uint8)
 
-    plt.imshow(lena_color)
-
     displayImage(lena_color, 'Lena color')
 
     
