@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 import numpy as np
-from vaja1.main import displayImage, loadImage
+from vaja1.main import displayImage, loadImage, saveImage
 
 
 
@@ -22,6 +22,7 @@ def computeHistogram(iImage):
 
     oHist = np.zeros(len(oLevels))
     
+
 
     for y in range(iImage.shape[0]):
         for x in range(iImage.shape[1]):
@@ -50,6 +51,28 @@ def equalizeHistogram(iImage):
 
     return oImage
 
+def equalizeHistogramDecimal(iImage):
+    h, p, cdf, l = computeHistogram(iImage)
+    nBits = int(np.log2(iImage.max())) + 1
+    smax = 2**nBits - 1
+    # T = np.floor(cdf*smax)
+    oImage = np.zeros_like(iImage)
+
+    counterList = list()
+    counter = 0
+
+    for y in range(iImage.shape[0]):
+        for x in range(iImage.shape[1]):
+            s_i = iImage[y][x]
+            oImage[y][x] = cdf[s_i] * smax
+            if cdf[s_i] * smax in counterList:
+                counter += 1
+            else:
+                counterList.append(cdf[s_i]*smax)
+            
+    print(counter)
+    return oImage
+
 def displayHistogram(iHist, iLevels, iTitle):
     plt.figure()
     plt.title(iTitle)
@@ -61,11 +84,16 @@ def displayHistogram(iHist, iLevels, iTitle):
 def computeEntropy(iImage):
     oEntropy = 0
     h, p, cdf, l = computeHistogram(iImage)
-    displayHistogram(cdf,l,"")
     for i in range(len(p)):
         if p[i] != 0.0:
             oEntropy += p[i] * np.log2(p[i])
     return oEntropy * -1
+
+    
+
+def addNoise(iImage, iStd):
+
+    pass
 
     
 
@@ -88,9 +116,9 @@ if __name__ == '__main__':
     displayImage(image,'Začetna slika')
     displayHistogram(h, l, 'Histogram začetne slike')
     displayHistogram(p, l, 'Normaliziran histogram začetne slike')
-    displayHistogram(cdf, l, 'Histogram kumulativne porazdelitve verjetnosti sivinskih vrednosti začetne slike')
+    displayHistogram(cdf, l, 'Kumulativna porazdelitev verjetnosti sivinskih vrednosti začetne slike')
     print("Kakšne lastnosti ima histogram dane slike?")
-    print("Odg: Histogram prikazuje, da ima večina pixlov na sliki sivinske vrednosti v območju od 120 do 180 ")
+    print("Odg: Sivinske vrednosti posameznih pixlov so v večini razporejene v območju med 120 in 180\n")
 
     # 2. Vprašanje
     equalizedImage = equalizeHistogram(image)
@@ -98,14 +126,24 @@ if __name__ == '__main__':
     displayImage(equalizedImage, 'Slika z izravnanim histogramom')
     displayHistogram(h1, l1, 'Histogram slike z izravnanim histogramom')
     displayHistogram(p1, l1, 'Normaliziran histogram slike z izravnanim histogramom')
-    displayHistogram(cdf1, l1, 'Histogram kumulativne porazdelitve verjetnosti sivinskih vrednosti slike z izravnanim histogramom')
+    displayHistogram(cdf1, l1, 'Kumulativna porazdelitev verjetnosti sivinskih vrednosti slike z izravnanim histogramom')
     print("Kakšne lastnosti ima histogram in kakšne kumulativna porazdelitev verjetnosti sivinskih vrednosti slike z izravnanim histogramom?")
-    print("Odg: Histogram slike z izravnanim histogramom ima sivinske vrednosti razporejene po celotnem dinamičnem območju. V primerjavi z histogramom začetne slike je histogram slike z izravnanim histogramom enake oblike vendar so sivinske vrednosti razpršene čez celotno dinamično območje. Histgoram kumulativne porazdelitve verjetnosti sivinskih vrednosti slike z izravnanim histogramom je ")
+    print("Odg: Histogram slike z izravnanim histogramom ima sivinske vrednosti razpršene po celotnem dinamičnem območju. Pri komulativni porazdelitvi verjetnosti sivinskih vrednosti pa lahko vidimo, da vrednosti skoraj linearno naraščajo. \n")
+
 
     # 3. Vprašanje
     entropyOriginal = computeEntropy(image)
-    print("Entropija začetne slike: ",entropyOriginal)
+    print(f"Entropija začetne slike: {entropyOriginal}")
 
     entropyEqualized = computeEntropy(equalizedImage)
-    print("Entropija slike z izravnanim histogramom: ",entropyEqualized)
+    print(f"Entropija slike z izravnanim histogramom: {entropyEqualized}\n")
+
+    print("Entropija katere slike je večja in zakaj?")
+    print("Odg: Večja je entropija prve slike. V teoriji bi morala imeti večjo entropijo slika z izravnanim histogramom, vendar pa imajo pixli lahko le celoštevilsko vrednost, zaradi česar moramo pri izravnavi histograma vrednosti zaokrožiti. Zaradi zaokroževanja slika nosi manj informacije posledično pa je manjša tudi entropija.")
+
+
+
+
+
+
 
