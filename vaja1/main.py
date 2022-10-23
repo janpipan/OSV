@@ -38,7 +38,7 @@ def displayImage(iImage, iTitle):
 # funkcija ki piše v raw format
 def saveImage(iImage, iPath, iType):
     oFile = open(iPath, 'wb')
-    oFile.write(iImage.tobytes(order="F"))
+    oFile.write(iImage.astype(iType).tobytes(order="F"))
     oFile.close() 
     
 if __name__ == '__main__':
