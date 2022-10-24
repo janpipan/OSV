@@ -95,7 +95,7 @@ if __name__ == "__main__":
     new_size = (600,300)
     image_interpolate_zero = interpolateImage(image_interpolate,new_size,0)
 
-    displayImage(image_interpolate_zero, "Interpolacija ničtega reda",(0,65),(0,50))
+    displayImage(image_interpolate_zero, "Interpolacija ničtega reda",(0,600),(0,300))
 
     h0, p0, cdf0, l0 = computeHistogram(image_interpolate_zero)
 
@@ -109,8 +109,7 @@ if __name__ == "__main__":
 
     image_interpolate_one = interpolateImage(image_interpolate,new_size,1)
 
-    displayImage(image_interpolate_one, "Interpolacija prvega reda",(0,65),(0,50))
-    displayImage(image_interpolate_one, "Interpolacija prvega reda drugič",(0,600),(0,300))
+    displayImage(image_interpolate_one, "Interpolacija prvega reda",(0,600),(0,300))
 
     h1, p1, cdf1, l1 = computeHistogram(image_interpolate_one)
 
