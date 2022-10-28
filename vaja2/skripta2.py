@@ -6,6 +6,7 @@ from vaja1.main import displayImage, loadImage, saveImage
 
 
 def computeHistogram(iImage):
+    iImage = iImage.astype(int)
     # histogram
     """ oHist = [0] * 255
     oProb = 0
@@ -32,7 +33,7 @@ def computeHistogram(iImage):
     
     oCDF = np.zeros_like(oHist, dtype=float)
     for i in range(len(oProb)):
-        oCDF[i] = oProb[:i].sum() 
+        oCDF[i] = oProb[:i+1].sum() 
 
     return oHist, oProb, oCDF, oLevels
 

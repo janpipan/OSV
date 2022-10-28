@@ -51,8 +51,8 @@ def interpolateImage(iImage, iSize, iOrder):
 def displayImage(iImage, iTitle, iGridX=None, iGridY=None):
     plt.figure()
     plt.title(iTitle)
-    if iGridX != None or iGridY != None:
-        plt.imshow(iImage, cmap='gray',aspect='equal',extent=(iGridX[0], iGridX[1], iGridY[0], iGridY[1]))
+    if iGridX is not None and iGridY is not None:
+        plt.imshow(iImage, cmap='gray',aspect='equal',extent=[iGridX[0], iGridX[-1], iGridY[0], iGridY[-1]])
     else:
         plt.imshow(iImage, cmap='gray',aspect='equal')
 
