@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from vaja3.skripta3 import displayImage, saveImage
+import time 
 
 
 def loadImage3D(iPath, iSize, iType):
@@ -96,7 +97,7 @@ def getPlannarProjection(iImage, iDim, iNormVec, iFunc):
 
                     if new_x >= 0 and new_y >= 0 and new_x < X and new_y < Y:
                         oP[new_y,new_x,z] = iImage[new_y,new_x,z] """
-        # creates one array for x indexes and one array for y indexes
+        """ # creates one array for x indexes and one array for y indexes
         y_index, x_index = np.indices((Y,X))
         y_index, x_index = y_index.flatten(), x_index.flatten()
 
@@ -122,7 +123,20 @@ def getPlannarProjection(iImage, iDim, iNormVec, iFunc):
                 if x_new_index[i] >= 0 and x_new_index[i] < X and y_new_index[i] >= 0 and y_new_index[i] < Y:
                     #oP[new_y[i]-1][new_x[i]-1][z] = iImage[yr[i]][xr[i]][z]
                     oP[y_index[i]][x_index[i]][z] = iImage[y_new_index[i]][x_new_index[i]][z]
-        
+         """
+        for z in range(Z):
+            for y in range(Y):
+                for x in range(X):
+                    y_val, x_val = (y - y_center) * dy, (x - x_center) * dx
+                    y_new_val, x_new_val = x_val*sin + y_val*cos, x_val*cos - y_val*sin
+                    x_new_index = np.round((x_new_val / dx) + x_center)
+                    y_new_index = np.round((y_new_val / dy) + y_center)
+                    x_new_index = x_new_index.astype(int)
+                    y_new_index = y_new_index.astype(int)
+                    if x_new_index >= 0 and x_new_index < X and y_new_index >= 0 and y_new_index < Y:
+                        #oP[new_y[i]-1][new_x[i]-1][z] = iImage[yr[i]][xr[i]][z]
+                        oP[y][x][z] = iImage[y_new_index][x_new_index][z]
+
         oP = iFunc(oP,axis=0).T
         oV = np.arange(Z) * dz
         oH = np.arange(X) * dx
@@ -200,14 +214,17 @@ if __name__ == '__main__':
 
     # 4. naloga
     func = np.max
+    start = time.time()
     PxI, PxH1, PxV1 = getPlannarProjection(I, iDim=vxDim, iNormVec=[3.83,9.24,0],iFunc=func)
     displayImage(PxI,"Prečna projekcija s povprečno vrednostjo", PxH1, PxV1) 
+    end = time.time()
+    print(f"{end - start}")
     #saveImage(PxI, "./vaja4/data/image.raw", np.uint8)
-    PxI, PxH1, PxV1 = getPlannarProjection(I, iDim=vxDim, iNormVec=[1,1,0],iFunc=func)
-    displayImage(PxI,"Prečna projekcija s povprečno vrednostjo", PxH1, PxV1) 
+    #PxI, PxH1, PxV1 = getPlannarProjection(I, iDim=vxDim, iNormVec=[1,1,0],iFunc=func)
+    #displayImage(PxI,"Prečna projekcija s povprečno vrednostjo", PxH1, PxV1) 
     #saveImage(PxI, "./vaja4/data/image.raw", np.uint8)
-    PxI, PxH1, PxV1 = getPlannarProjection(I, iDim=vxDim, iNormVec=[9.24,3.83,0],iFunc=func)
-    displayImage(PxI,"Prečna projekcija s povprečno vrednostjo", PxH1, PxV1) 
+    #PxI, PxH1, PxV1 = getPlannarProjection(I, iDim=vxDim, iNormVec=[9.24,3.83,0],iFunc=func)
+    #displayImage(PxI,"Prečna projekcija s povprečno vrednostjo", PxH1, PxV1) 
     #saveImage(PxI, "./vaja4/data/image.raw", np.uint8)
 
     
