@@ -63,7 +63,7 @@ def getPlannarProjection(iImage, iDim, iNormVec, iFunc):
         oV = np.arange(Z) * dz
         oH = np.arange(X) * dx
     elif iNormVec == [0,0,1]:
-        oP = iFunc(iImage, axis=2).T
+        oP = iFunc(iImage, axis=2)
         oV = np.arange(Y) * dy
         oH = np.arange(X) * dx
     elif iNormVec[2] == 0:
