@@ -208,11 +208,11 @@ if __name__ == '__main__':
     # variance, je v primeru prikazovanja CT slik človeškega telesa sploh smiselno računati?
     # Obrazložite odgovor.
     print("3. Naloga:\nKatere vrste projekcij, pri katerih za funkcijo točk uporabite makismalno vrednost, minimalno vrednost, povprečno vrednost, vrednost mediane, vrednost standardnega odklona oz. vrednost variance, je v primeru prikazovanja CT slik človeškega telesa sploh smiselno računati? Obrazložite odgovor.")
-    print("Odg: Smiselno je računati le stransko in čelno projekcijo, saj v primeru prečne projekcije pri kateri za določitev sivinske vrednosti posameznega piksla uporabimo funkcijo, dobimo nesmiselno sliko iz katere ni možno pridobiti uporabnih informacij.")
+    print("Odg: Smiselno je računati le stransko in čelno projekcijo, saj v primeru prečne projekcije pri kateri za določitev sivinske vrednosti posameznega piksla uporabimo funkcijo, dobimo nesmiselno sliko iz katere ni možno pridobiti uporabnih informacij. Pri stranski in čelni projekciji pa se dobro vidijo deli človeškega telesa.")
 
     # 4. naloga
     print("4. Naloga:\nPriložite programsko kodo algoritma ter slike čelnih poševnih ravninskih projekcij vrste MIP za normalne vektroje n_1=(3.83,9.24,0), n_2=(1,1,0), n_3=(9.24,3.83,0), ki so v dimenzijskem sorazmerju z velikostjo slikovnega elementa dane 3D slike. Naštejte in obrazložite nekaj pomankljivosti uporabljenega pristopa k določanju poševnih ravninskih projekcij.")
-    print("Odg: Z uporabljenim pristopom izgubimo točke, ki niso več v območju naše slike, zaradi česar na so imajo projekcijske slike določene dele odrezane. Pravtako zaradi zaokroževanja lahko večim točkam dodelimo enako sivinsko vrednost.")
+    print("Odg: Z uporabljenim pristopom izgubimo točke, ki niso več v območju naše slike, zaradi česar imajo projekcijske slike določene dele odrezane. Pravtako se zaradi zaokroževanja lahko več točk preslika v isto točko, tem pa se nato dodelijo enake sivinske vrednosti.")
     func = np.max
     PxI, PxH1, PxV1 = getPlannarProjection(I, iDim=vxDim, iNormVec=[3.83,9.24,0],iFunc=func)
     displayImage(PxI,"Poševna ravninska projekcija vrste MIP z normalnim vektorjem n_1=(3.83,9.24,0)", PxH1, PxV1) 
