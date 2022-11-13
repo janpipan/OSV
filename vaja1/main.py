@@ -54,30 +54,30 @@ if __name__ == '__main__':
     #plt.imsave('./vaja1/data/lena.jpeg', picture)
 
 
-    raw_img = './vaja1/data/lena-gray-410x512-08bit.raw'
+    #raw_img = './vaja1/data/lena-gray-410x512-08bit.raw'
 
-    lena_gray= loadImage(raw_img, (410,512), np.uint8)
+    #lena_gray= loadImage(raw_img, (410,512), np.uint8)
 
-    displayImage(lena_gray, 'Lena gray')
+    #displayImage(lena_gray, 'Lena gray')
 
-    saveImage(lena_gray,'./vaja1/data/lena-gray.raw', np.uint8)
+    #saveImage(lena_gray,'./vaja1/data/lena-gray.raw', np.uint8)
 
 
 
     #plt.figure()
     #plt.imshow(lena_grey, cmap='gray')
 
-    lena_color_path = './vaja1/data/lena-color-512x410-08bit.raw'
+    #lena_color_path = './vaja1/data/lena-color-512x410-08bit.raw'
 
-    lena_color = loadImage(lena_color_path, (512,410), np.uint8)
+    #lena_color = loadImage(lena_color_path, (512,410), np.uint8)
 
-    displayImage(lena_color, 'Lena color')
+    #displayImage(lena_color, 'Lena color')
 
     
 
-    lena_gray_raw_path = './vaja1/data/lena-gray.raw'
+    #lena_gray_raw_path = './vaja1/data/lena-gray.raw'
 
-    lena_gray_raw = loadImage(lena_gray_raw_path, (410,512), np.uint8)
+    #lena_gray_raw = loadImage(lena_gray_raw_path, (410,512), np.uint8)
 
-    displayImage(lena_gray_raw,"lena gray raw")
+    #displayImage(lena_gray_raw,"lena gray raw")
 
