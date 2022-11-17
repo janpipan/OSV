@@ -135,7 +135,7 @@ if __name__ == '__main__':
     print("Priložite sliko, ki prikazuje potek števila slikovnih elementov upragovane slike s sivinsko vrednostjo s_g=0 v odvisnosti od parametra t, pri čemer t spremnijate čez celotno dinamično območje sivinskih vrednosti linearno oknene slike (iz točke 3 navodil) po koraku 1. Kako se imenuje prikazan potek? Priložite tudi pripadajočo programsko kodo.")
     val, l = threshRange(wI)
     displayHistogram(val, l, "Histogram")
-    print("Na sliki dobimo porazdelitev sivinskih elementov v vhodni sliki. Če bi prikazan potek normalizirali s številom slikovnih elementov, bi prikazan potek predstavljal komulativno porazdelitev slikovnih elementov.")
+    print("Slika prikazuje število slikovnih elementov, ki imajo sivinsko vrednost manjšo od določene vrednosti. Če bi prikazan potek normalizirali s številom slikovnih elementov, bi prikazan potek predstavljal komulativno porazdelitev slikovnih elementov.")
 
     print("Naloga 4:")
     print("Priložite funkcijo za odsekoma nelinearno preslikavo na podlagi kontrolnih točk. Priložite programsko kodo funkcije nonLinearSectionalScaleImage() in sliko, pridobljeno z odsekoma nelinearno preslikavo sivinskih vrednosti dane slike pri kontrolnih točkah s_1=(0,0), s_2=(40,255), s_3=(80,80), s_4=(127,20), s_5=(167,167), s_6=(207,240) in s_7=(255,255). Zapišite tudi koeficiente A_i, B_i, C_i dobljenih kvadratnih funkcij q_i; i = 0, 2, 4")
