@@ -60,7 +60,7 @@ def nonLinearSectionalScaleImage(iImage, iS, oS):
 
     coefficients = []
 
-    for i in range(len(iS)-2):
+    for i in range(0,len(iS)-2,2):
 
         sp_meja_vhd = iS[i]
         zg_meja_vhd = iS[i+2]
