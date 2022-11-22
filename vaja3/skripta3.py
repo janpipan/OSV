@@ -48,14 +48,15 @@ def interpolateImage(iImage, iSize, iOrder):
 
 
 
-def displayImage(iImage, iTitle, iGridX=None, iGridY=None):
+def displayImage(iImage, iTitle, iGridX=None, iGridY=None, points=None):
     plt.figure()
     plt.title(iTitle)
     if iGridX is None or iGridY is None:
         plt.imshow(iImage, cmap='gray',aspect='equal',vmin=0, vmax=255)
     else:
         plt.imshow(iImage, cmap='gray',aspect='equal',extent=[iGridX[0], iGridX[-1], iGridY[0], iGridY[-1]],vmin=0, vmax=255)
-    plt.show()
+    if points == None:
+        plt.show()
 
 """ def getMinMaxAverage(p):
     minimum, maximum, average = -1, 0, 0  
