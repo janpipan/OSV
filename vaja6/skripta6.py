@@ -140,14 +140,14 @@ if __name__ == "__main__":
     print("Naloga 1.")
     print("Izvedite afino preslikavo nad sliko grid-256x512-08bit.raw s paramteroma k_y = 0.8 in g_xy = 0.5 (preostali paramanteri naj ne vplivajo na prelikavo), pri čemer za določanje sivinskih vrednosti enkrat uporabite interpolacijo ničtega reda, drugič pa interpolacijo prvega reda. Priložite programsko kodo spremenjene funkcije transformImage() ter izrisa slik po preslikavi.")
     image_grid = loadImage(f"./vaja6/data/grid-256x512-08bit.raw", orig_size, np.uint8)
-    displayImage(image_grid, "Original grid image", iGridX=[0,511], iGridY=[0,511])
+    displayImage(image_grid, "Originalna grid slika", iGridX=[0,511], iGridY=[0,511])
 
     affine = getParameters(iType='affine', rot=0, scale=[1,0.8], trans=[0,0], shear=[0.5,0])
     transform_grid_inter0 = transformImage(iType='affine',iImage=image_grid, iDim=pxDim, iP=np.linalg.inv(affine), iBgr=63)
-    displayImage(transform_grid_inter0,"Afino preslikana grid slika z uporabo interpolacije 0",iGridX=[0,511], iGridY=[0,511])
+    displayImage(transform_grid_inter0,"Afino preslikana grid slika z uporabo interpolacije ničtega reda",iGridX=[0,511], iGridY=[0,511])
 
     transform_grid_inter1 = transformImage(iType='affine', iImage=image_grid, iDim=pxDim, iP=np.linalg.inv(affine), iBgr=63, iInterp=1)
-    displayImage(transform_grid_inter1, "Afino prelikana grid slika z uporabo interpolacije 1",iGridX=[0,511], iGridY=[0,511])
+    displayImage(transform_grid_inter1, "Afino prelikana grid slika z uporabo interpolacije prvega reda",iGridX=[0,511], iGridY=[0,511])
 
     # Naloga 2. Doma
     # Izvedite vsako od naslednjih afinih preslikav nad sliko lena-256x512-08bit.raw, pri čemer uporabite samo podane parameter (preostali paramteri naj ne vplivajo na prelikavo)
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     print("Kako se imenuje preslikava iz vprašanja 2. e) in kako preslikava iz vprašanja 2. f)? Opišite lastnosti teh preslikav.")
     
     print("Preslikava iz naloga 2. e) se imenuje toga preslikava, pri kateri se izvede rotacija, ter translacija slike. Lastnosti te preslikave so, da: ohranja vzporednost med premicami, ohranja kote med premicami, ohranja razdalje med poljubnimi točkami ")
-    print("Preslikava iz naloge 2. f) se imenuje podobnostna preslikava, pri kateri se izvede toga preslikava in izotropno skaliranje slike. Lastnosti te preslikave so, da: ohranja vzporednost med premicami, ohranja kote med premicami, ne ohranja razdalj med poljubnimi točkami")
+    print("Preslikava iz naloge 2. f) se imenuje podobnostna preslikava, pri kateri se izvede toga preslikava in izotropno skaliranje slike. Lastnosti te preslikave so, da: ohranja vzporednost med premicami, ohranja kote med premicami, ne ohranja razdalj med poljubnimi točkami\n")
     
     # Naloga 4. Doma
     # Izvedite afini preslikavi iz vprašanja 2(c) in vprašanja 2(d) nad sliko lena-256x512-08bit.raw, pri čemer izhodišče koordinatnega sistema preslikave prestavitev v središče slike (tako da se slika npr. vrti okoli svojega središča)
@@ -218,17 +218,26 @@ if __name__ == "__main__":
 
     # Ali glede na položaj točk preslikava deluje pravilno? Obrazložite odgovor.
 
+    print("Naloga 5.")
+
+    print("Izvedite radialno preslikavo z naslednjimi kontrolnimi točkami (x_k, y_k), ter pripadajočimi preslikanimi kontrolnimi točkami (u_k,v_k)")
+    print("Priložite izrise originalne in preslikane slike z vrisanimi kontrolnimi in preslikanimi točkami, in sicer za radialno preslikavo nad sliko grid-256x512-08bit.raw ter za radialno preslikavo nad sliko lena-256x512-08bit.raw")
+
     XY = np.array([[0,0], [511,0], [0,511], [511,511], [63,63], [63,447], [447,63], [447,447]])
     UV = np.array([[0,0], [511,0], [0,511], [511,511], [127,95], [127,415], [383,95], [383,415]])
-    displayImage(image, 'Original Lena', iGridX=[0,511], iGridY=[0,511], points=True)
+    displayImage(image, 'Originalna slika Lene', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(XY, "rx")
     radial_parameters = getParameters(iType='radial', orig_pts=XY, mapped_pts=UV)
     radial_lena = transformImage(iType='radial', iImage=image, iDim=pxDim, iP=radial_parameters, iBgr=63, iInterp=1)
-    displayImage(radial_lena, 'Lena radial transforamtion', iGridX=[0,511], iGridY=[0,511], points=True)
+    displayImage(radial_lena, 'Lena radialna preslikava', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(UV, "bo")
 
-    displayImage(image_grid, 'Original grid', iGridX=[0,511], iGridY=[0,511], points=True)
+    displayImage(image_grid, 'Orignialna grid slika', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(XY, "rx")
     radial_lena = transformImage(iType='radial', iImage=image_grid, iDim=pxDim, iP=radial_parameters, iBgr=63, iInterp=1)
-    displayImage(radial_lena, 'Lena radial transforamtion', iGridX=[0,511], iGridY=[0,511], points=True)
+    displayImage(radial_lena, 'Grid radialna preslikava', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(UV, "bo")
+
+    print("Ali glede na položaj točk preslikava deluje pravilno? Obrazložite odgovor.")
+
+    print("Preslikava ne deluje po pričakovanjih, saj deluje obratno. Obratno deluje zato, ker se preslikane kontrolne točke preslikajo v kontrolne točke.")
