@@ -37,9 +37,10 @@ def changeSpatialDomain(iType, iImage, iX, iY, iMode=None, iBgr=0):
             oImage[iY+Y:,iX+X:] = np.ones((iY,iX)) * iImage[Y-1][X-1]
 
         elif iMode == 'reflection':
-            numPicsX = 2*math.ceil(iX/X) + 1
-            numPicsY = 2*math.ceil(iY/Y) + 1
-            oImage = np.zeros((Y*numPicsY,X*numPicsX), dtype=float)
+            numPicsX = math.ceil(iX/X)
+            numPicsY = math.ceil(iY/Y)
+            tImgSize = (Y*(2*numPicsY+1),X*(2*numPicsX+1))
+            tImage = np.zeros(tImgSize, dtype=float)
             """ # top side
             oImage[:iY,iX:iX+X] = np.flipud(iImage[:iY,:X])
             # bottom side
@@ -56,22 +57,53 @@ def changeSpatialDomain(iType, iImage, iX, iY, iMode=None, iBgr=0):
             oImage[iY+Y:,:iX] = np.flip(iImage[Y-iY:,:iX])
             # bottom right corner
             oImage[iY+Y:,iX+X:] = np.flip(iImage[Y-iY:,X-iX:]) """
-            imageIndexX , imageIndexY = iX % X, iY % Y
-            """ image1 = np.copy(iImage)
+            # set flipped images
+            image1 = np.copy(iImage)
             image2 = np.copy(iImage[:,::-1])
             image3 = np.copy(iImage[::-1,:])
             image4 = np.copy(iImage[::-1,::-1])
-            picsNumX = math.ceil(iX/X)
-            picsNumY = math.ceil(iY/Y) """
-            imageSelectorX = numPicsX % 2
-            imageSelectorY = numPicsY % 2
-            print(imageSelectorX, imageSelectorY)
+            startX, indexY = 0,0
+            # determine which image starts in top left corner 
+            # set how to flip image 
+            if (numPicsX % 2 == 1):
+                imageSelectorX = 4
+                startX = 1
+            elif (numPicsX % 2 == 0):
+                imageSelectorX = 8
+            if (numPicsY % 2 == 1):
+                imageSelectorY = 1
+                indexY = 1
+            elif (numPicsY % 2 == 0):
+                imageSelectorY = 2
+            imageSelector = imageSelectorY + imageSelectorX
             image = iImage
-            for y in range(numPicsY):
-                for x in range(numPicsX):
-                    oImage[Y*y:Y*(y+1),X*x:X*(x+1)] = image
+            # add pictures to temp image
+            for y in range(2*numPicsY+1):
+                # set x flipping  
+                indexX = startX + (y%2)
+                for x in range(2*numPicsX+1):
+                    # set which image will be placed to the range
+                    if imageSelector == 10:
+                        image = image3
+                    elif imageSelector == 9:
+                        image = image4
+                    elif imageSelector == 6:
+                        image = image2
+                    elif imageSelector == 5:
+                        image = image1
+                    # add image to the range
+                    tImage[Y*y:Y*(y+1),X*x:X*(x+1)] = image
+                    # add or subtract to image selector
+                    imageSelector += (-1)**(indexX)
+                    indexX += 1
+                imageSelector += ((-1)**(indexY))*4
+                indexY += 1
+            # set output image
+            oImgSize = (Y+2*iY,X+2*iX)
+            oImage = np.zeros(oImgSize, dtype=float)
+            tImgExtra = (int((tImgSize[0]-oImgSize[0])/2)), int((tImgSize[1]-oImgSize[1])/2)
             
-
+            oImage = tImage[tImgExtra[0]:oImgSize[0]+tImgExtra[0],tImgExtra[1]:oImgSize[1]+tImgExtra[1]]
               
 
         elif iMode == 'period':
@@ -165,11 +197,13 @@ def sobelAmplitudePhase(g_x, g_y):
     oAmplitude = np.sqrt(g_x**2+g_y**2)
     # normalize values and multiply by 255 to get values in range 0..255
     oAmplitude = oAmplitude / oAmplitude.max() * 255
+    g_x[g_x==0]=0.00000001
 
-    #oPhase = np.arctan(g_y/g_x)
-    #print(oPhase)
+    oPhase = np.arctan(g_y/g_x)
+    oPhase = oPhase / np.pi * 255
+    print(oPhase)
 
-    return oAmplitude#, oPhase
+    return oAmplitude, oPhase
 
 def sharpenImage(iImage, filter, c):
     fImage = spatialFiltering(iType='kernel', iImage=iImage, iFilter=filter)
@@ -225,9 +259,9 @@ if __name__ == '__main__':
     displayImage(sobelXImage, "Filtriranje s sobelovim operatorjem v x smeri")
     displayImage(sobelYImage, "Filtriranje s sobelovim operatorjem v y smeri")
 
-    ampImage = sobelAmplitudePhase(sobelXImage,sobelYImage)
+    ampImage, phaseImage = sobelAmplitudePhase(sobelXImage,sobelYImage)
     displayImage(ampImage, "Amplitude image")
-    #displayImage(phaseImage, "Fazni odziv ")
+    displayImage(phaseImage, "Fazni odziv ")
     # Naloga 4. Doma:
     # Izostrite dano sliko s pomočjo t. i. maskiranja neostrih področij, pri čemer za pridobivanje maske uporabite glajenje z Gaussovim povprečenjem (jedro filtra velikosti 3x3 je podano v navodilih), za stopnjo ostrenja pa izbrete c = 2.
 
