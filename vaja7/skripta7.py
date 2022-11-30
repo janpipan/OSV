@@ -341,7 +341,7 @@ if __name__ == '__main__':
     print("Naloga 6.")
     print("Primerjajte rezultate, ki jih pridobite z različnimi vrstami filtriranja nad vhodno sliko, pri čemer vhodni sliki na različen način spremenite prostorsko domeno")
     
-    filter1 = weightedAverageFilter(101,101,2)
+    filter1 = weightedAverageFilter(21,21,100)
     filter1 = filter1 / filter1.sum()
     cV = spatialFiltering(iType='kernel', iImage=image, iFilter=filter1, kernelMode = 'constant')
     eV = spatialFiltering(iType='kernel', iImage=image, iFilter=filter1, kernelMode = 'extrapolation')
@@ -353,7 +353,8 @@ if __name__ == '__main__':
     displayImage(rV, "Zrcaljenje sivinskih vrednosti")
     displayImage(pV, "Ponavljanje sivinskih vrednosti")
 
-    
+    print("Rezultati so zelo podobni, razlike se poja")
+
 
 
 
