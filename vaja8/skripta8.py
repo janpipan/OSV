@@ -5,7 +5,21 @@ from vaja5.skripat5 import thresholdImage
 
 
 def getCenterPoint(iImage, iRadius):
+
+    oAcc = np.zeros((iImage.shape[0], iImage.shape[1]), dtype=np.uint8)
+    for i in range(iImage.shape[0]):
+        for j in range(iImage.shape[1]):
+            if iImage[i, j] > 0:
+                for theta in range(360):
+                    a = i + iRadius * np.cos(theta)
+                    b = j + iRadius * np.sin(theta)
+                    if a < iImage.shape[0] and b < iImage.shape[1]:
+                        oAcc[int(a), int(b)] += 1
+
+    oCenter = (np.unravel_index(oAcc.argmax(), oAcc.shape))
     return oCenter, oAcc
+
+    #return oCenter, oAcc
 
 if __name__ == "__main__":
     orig_size = [160,160]
@@ -25,3 +39,7 @@ if __name__ == "__main__":
     ampImageThreshold = thresholdImage(ampImage, 220)
 
     displayImage(ampImageThreshold, "Upragovljena slika amplitudnega odziva")
+
+    coords, hough_space = getCenterPoint(ampImageThreshold, 39)
+    print(coords)
+    displayImage(hough_space, "Hough space accumulator")
