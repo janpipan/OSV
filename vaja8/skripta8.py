@@ -7,19 +7,22 @@ from vaja5.skripat5 import thresholdImage
 def getCenterPoint(iImage, iRadius):
 
     oAcc = np.zeros((iImage.shape[0], iImage.shape[1]), dtype=np.uint8)
+    max = 0
+    oCenter = (0,0)
     for i in range(iImage.shape[0]):
         for j in range(iImage.shape[1]):
-            if iImage[i, j] > 0:
-                for theta in range(360):
-                    a = i + iRadius * np.cos(theta)
-                    b = j + iRadius * np.sin(theta)
-                    if a < iImage.shape[0] and b < iImage.shape[1]:
-                        oAcc[int(a), int(b)] += 1
+            if iImage[i, j]:
+                for phi in range(360):
+                    x0 = int(np.round(j + iRadius * np.cos(phi)))
+                    y0 = int(np.round(i + iRadius * np.sin(phi)))
+                    if x0 < iImage.shape[1] and x0 >= 0 and y0 >= 0 and y0 < iImage.shape[0]:
+                        oAcc[y0, x0] += 1
+                        if oAcc[y0, x0] > max:
+                            max = oAcc[y0,x0]
+                            oCenter = (x0,y0)
 
-    oCenter = (np.unravel_index(oAcc.argmax(), oAcc.shape))
     return oCenter, oAcc
 
-    #return oCenter, oAcc
 
 if __name__ == "__main__":
     orig_size = [160,160]
@@ -32,14 +35,11 @@ if __name__ == "__main__":
     sobelYImage = spatialFiltering(iType='kernel',iImage=image, iFilter=sobelFilterY)
     ampImage, phaseImage = sobelAmplitudePhase(sobelXImage,sobelYImage)
     displayImage(ampImage, "Amplitudni odziv ")
-    displayImage(phaseImage, "Fazni odziv ")
-    sobelXImage = (sobelXImage - sobelXImage.min()) / (np.abs(sobelXImage.min()) + sobelXImage.max()) * 255
-    sobelYImage = (sobelYImage - sobelYImage.min()) / (np.abs(sobelYImage.min()) + sobelYImage.max()) * 255
 
     ampImageThreshold = thresholdImage(ampImage, 220)
 
     displayImage(ampImageThreshold, "Upragovljena slika amplitudnega odziva")
 
-    coords, hough_space = getCenterPoint(ampImageThreshold, 39)
-    print(coords)
-    displayImage(hough_space, "Hough space accumulator")
+    center, acc = getCenterPoint(ampImageThreshold, 39)
+    print('(x,y) =', center)
+    displayImage(acc, "Akumulator Houghove preslikave")

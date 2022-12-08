@@ -221,7 +221,6 @@ def weightedAverageFilter(iM, iN, iValue):
 def sobelAmplitudePhase(g_x, g_y):
     # calculate amplitude response
     oAmplitude = np.sqrt(g_x**2+g_y**2)
-    print(oAmplitude.max())
     # normalize values and multiply by 255 to get values in range 0..255
     oAmplitude = oAmplitude / oAmplitude.max() * 255
     oPhase = np.zeros(g_y.shape)
@@ -341,7 +340,7 @@ if __name__ == '__main__':
     print("Naloga 6.")
     print("Primerjajte rezultate, ki jih pridobite z različnimi vrstami filtriranja nad vhodno sliko, pri čemer vhodni sliki na različen način spremenite prostorsko domeno")
     
-    filter1 = weightedAverageFilter(21,21,100)
+    filter1 = weightedAverageFilter(21,21,1)
     filter1 = filter1 / filter1.sum()
     cV = spatialFiltering(iType='kernel', iImage=image, iFilter=filter1, kernelMode = 'constant')
     eV = spatialFiltering(iType='kernel', iImage=image, iFilter=filter1, kernelMode = 'extrapolation')
@@ -353,7 +352,7 @@ if __name__ == '__main__':
     displayImage(rV, "Zrcaljenje sivinskih vrednosti")
     displayImage(pV, "Ponavljanje sivinskih vrednosti")
 
-    print("Rezultati so zelo podobni, razlike se poja")
+    print("Razlike so opazne na robovih. Pri razširitvi prostorske domene s konstantno sivinsko vrednostjo in pa s ponavljanjem sivinskih vrednosti sta robova najbolj očitna, zato ker lahko z uporabo teh dveh metod pride do večjega preskoka med sivniskimi vrednostmi na robu slike.")
 
 
 
