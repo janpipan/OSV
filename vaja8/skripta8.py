@@ -13,8 +13,8 @@ def getCenterPoint(iImage, iRadius):
         for j in range(iImage.shape[1]):
             if iImage[i, j]:
                 for phi in range(360):
-                    x0 = int(np.round(j + iRadius * np.cos(phi)))
-                    y0 = int(np.round(i + iRadius * np.sin(phi)))
+                    x0 = int(np.round(j + iRadius * np.cos(np.deg2rad(phi))))
+                    y0 = int(np.round(i + iRadius * np.sin(np.deg2rad(phi))))
                     if x0 < iImage.shape[1] and x0 >= 0 and y0 >= 0 and y0 < iImage.shape[0]:
                         oAcc[y0, x0] += 1
                         if oAcc[y0, x0] > max:
