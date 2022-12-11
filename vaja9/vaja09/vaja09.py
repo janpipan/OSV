@@ -2,6 +2,7 @@
 
 from operator import sub
 import os
+from re import I
 import sys
 
 from matplotlib.backends.qt_compat import QtCore
@@ -941,11 +942,39 @@ def getImages(iImage1, iImage2, iStep):
 
 # napaka R2 in MSE pred in po poravnavi
 def computeError(rCP, iCP, oCP, rImage, iImage, oImage, iArea):
-    """
-    Funkcije za izracun napake poravnave
-    """
+    
+    K = rCP.shape[0]
+    x = iArea[0]
+    y = iArea[1]
+    w = iArea[2]
+    h = iArea[3]
 
-    raise NotImplementedError("Implement me")
+    R_before = 0
+    R_after = 0
+
+    MSE_before = 0
+    MSE_after = 0
+
+    for k in range(K):
+        R_before += (iCP[k][0] - rCP[k][0])**2 + (iCP[k][1] - rCP[k][1])**2
+        R_after += (oCP[k][0] - rCP[k][0])**2 + (oCP[k][1] - rCP[k][1])**2
+    R_before /= K
+    R_after /= K
+
+    R2 = [R_before, R_after]
+
+    for i in range(h):
+        for j in range(w):
+            MSE_before += round((rImage[y+i, x+j] - iImage[y+i, x+j])**2, 2) 
+            if oImage[y+i, x+j]:
+                MSE_after += round((rImage[y+i, x+j] - oImage[y+i, x+j])**2, 2)
+    
+    MSE_before = round(MSE_before / (i*j),2)
+    MSE_after = round(MSE_after / (i*j),2)
+
+    MSE = [MSE_before, MSE_after]
+
+    return R2, MSE
 
 
 if __name__ == "__main__":
