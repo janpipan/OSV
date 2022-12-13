@@ -958,19 +958,20 @@ def computeError(rCP, iCP, oCP, rImage, iImage, oImage, iArea):
     for k in range(K):
         R_before += (iCP[k][0] - rCP[k][0])**2 + (iCP[k][1] - rCP[k][1])**2
         R_after += (oCP[k][0] - rCP[k][0])**2 + (oCP[k][1] - rCP[k][1])**2
-    R_before /= K
-    R_after /= K
+    R_before = round(R_before/K, 2)
+    R_after = round(R_after/K, 2)
 
     R2 = [R_before, R_after]
 
     for i in range(h):
         for j in range(w):
-            MSE_before += round((rImage[y+i, x+j] - iImage[y+i, x+j])**2, 2) 
+            MSE_before += (int(rImage[y+i, x+j]) - int(iImage[y+i, x+j]))**2
             if oImage[y+i, x+j]:
-                MSE_after += round((rImage[y+i, x+j] - oImage[y+i, x+j])**2, 2)
+                MSE_after += (int(rImage[y+i, x+j]) - int(oImage[y+i, x+j]))**2
     
-    MSE_before = round(MSE_before / (i*j),2)
-    MSE_after = round(MSE_after / (i*j),2)
+
+    MSE_before = round(MSE_before / (w*h),2)
+    MSE_after = round(MSE_after / (w*h),2)
 
     MSE = [MSE_before, MSE_after]
 
