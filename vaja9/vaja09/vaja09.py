@@ -954,7 +954,7 @@ def computeError(rCP, iCP, oCP, rImage, iImage, oImage, iArea):
 
     MSE_before = 0
     MSE_after = 0
-
+    #calculate R2
     for k in range(K):
         R_before += (iCP[k][0] - rCP[k][0])**2 + (iCP[k][1] - rCP[k][1])**2
         R_after += (oCP[k][0] - rCP[k][0])**2 + (oCP[k][1] - rCP[k][1])**2
@@ -963,16 +963,18 @@ def computeError(rCP, iCP, oCP, rImage, iImage, oImage, iArea):
 
     R2 = [R_before, R_after]
     ij_after = 0
-
+    #calculate MSE
     for i in range(h):
         for j in range(w):
             MSE_before += (int(rImage[y+i, x+j]) - int(iImage[y+i, x+j]))**2
+            #don't include black pixels in calculation
             if oImage[y+i, x+j]:
                 ij_after += 1
                 MSE_after += (int(rImage[y+i, x+j]) - int(oImage[y+i, x+j]))**2
     
 
     MSE_before = round(MSE_before / (w*h),2)
+    #divide by number of points that were included in calculation
     MSE_after = round(MSE_after / (ij_after),2)
 
     MSE = [MSE_before, MSE_after]

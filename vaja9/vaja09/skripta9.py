@@ -7,6 +7,7 @@ import time
 
 def exhaustiveRegistration(iImageA, iImageB, iTx, iTy):
 
+    # set start, stop and step parameters
     tx_start = iTx[0]
     tx_stop = iTx[1]
     tx_step = iTx[2]
@@ -17,36 +18,25 @@ def exhaustiveRegistration(iImageA, iImageB, iTx, iTy):
     ty_step = iTy[2]
     ty_range = int((ty_stop-ty_start)/ty_step)+1
 
-    oMap = np.zeros((tx_range,ty_range))
-    oTx = np.zeros(tx_range)
-    oTy = np.zeros(ty_range)
+    # init output arrays
+    oMap = np.zeros((ty_range,tx_range))
+    oTx = np.arange(tx_start,tx_stop+1,tx_step)
+    oTy = np.arange(ty_start,ty_stop+1,ty_step)
 
     for y in range(0,ty_range):
         for x in range(0,tx_range):
+            # transform image
             params = getParameters(iType='affine', rot=0, scale=[1,1], trans=[(x+tx_start)*tx_step,(y+ty_start)*ty_step], shear=[0,0])
             transformedImage = transformImage(iType='affine', iImage=np.copy(iImageB), iDim=[1,1], iP=np.linalg.inv(params), iInterp=1)
-            
+            #calculate MSE
             MSE = 0
-            counter = 0
             for i in range(iImageA.shape[0]):
                 for j in range(iImageA.shape[1]):
-                    if transformedImage[i,j]:
                         MSE += (iImageA[i, j] - transformedImage[i, j])**2
-                        counter+=1
-            
-
-            
-            #MSE /= (iImageA.shape[0]* iImageA.shape[1])
-            MSE /= counter
-            oMap[x,y] = MSE
-            oTx[x] = (x+tx_start)*tx_step
-        oTy[y] = (y+ty_start)*ty_step
         
-        
-        
-        
-
-
+            MSE /= (iImageA.shape[0]* iImageA.shape[1])
+            # add MSE result to output map
+            oMap[y,x] = MSE
     
     return oMap, oTx, oTy
 
@@ -65,22 +55,29 @@ if __name__ == '__main__':
     displayImage(image2, 'Slika T1')
 
     m, x, y = exhaustiveRegistration(imageRef, image1, tx, ty)
-    print(m, x, y)
     X, Y = np.meshgrid(x,y)
     fig = plt.figure()
     ax = plt.axes(projection='3d')
+    ax.set_title("Head-SD")
+    ax.set_xlabel("Premik po x-osi")
+    ax.set_ylabel("Premik po y-osi")
+    ax.set_zlabel("Premik po z-osi")
     ax.plot_surface(X, Y, m, rstride=1, cstride=1)
 
     
 
     m1, x1, y1 = exhaustiveRegistration(imageRef, image2, tx, ty)
-    print(m1, x1, y1)
     X1, Y1 = np.meshgrid(x1,y1)
     fig = plt.figure()
     ax = plt.axes(projection='3d')
+    ax.set_title("Head-T1")
+    ax.set_xlabel("Premik po x-osi")
+    ax.set_ylabel("Premik po y-osi")
+    ax.set_zlabel("Premik po z-osi")
     ax.plot_surface(X1, Y1, m1, rstride=1, cstride=1)
 
-    """ min = m[0][0]
+    #calculate best 
+    min = m[0][0]
     minPos = [0,0]
 
     for i in range(m.shape[0]):
@@ -89,23 +86,7 @@ if __name__ == '__main__':
                 min = m[i,j]
                 minPos = [i,j]
 
-    print(minPos)
-
-    params = getParameters(iType='affine', rot=0, scale=[1,1], trans=[9,-4], shear=[0,0])
-    transformedImage = transformImage(iType='affine', iImage=np.copy(image1), iDim=[1,1], iP=np.linalg.inv(params), iInterp=1)
-    displayImage(transformedImage,"test")
-
-
-    MSE = 0
-    counter = 0
-    for i in range(imageRef.shape[0]):
-        for j in range(imageRef.shape[1]):
-                MSE += (imageRef[i, j] - transformedImage[i, j])**2
-                counter += 1
-    
-    MSE /= (imageRef.shape[0] * imageRef.shape[1])
-    print(MSE) 
-
+    print(x[minPos[1]],y[minPos[0]])
 
     min = m[0][0]
     minPos = [0,0]
@@ -116,6 +97,5 @@ if __name__ == '__main__':
                 min = m1[i,j]
                 minPos = [i,j]
 
-    print(min)
-    print(minPos) """
+    print(x1[minPos[1]],y1[minPos[0]])
     
