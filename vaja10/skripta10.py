@@ -79,7 +79,11 @@ def getFilterSpectrum(iMatrix, iD0, iType):
 
     
     elif iType[0] == 'B':
-        pass
+        q = 2
+        for n in range(N):
+            for m in range(M):
+                D = np.sqrt((n - n_center) ** 2 + (m - m_center) ** 2)
+                oMatrix[n, m] = 1/(1+(D/iD0) ** (2*q))
 
     if iType[1:] == 'HPF':
         oMatrix = 1 - oMatrix
@@ -112,3 +116,51 @@ if __name__ == '__main__':
 
     gf = computeDFT2(Gf, iDir='inverse')
     analyzeDFT2(gf, iOperations=['amplitude','display'], iTitle='filtered spectrum')
+
+
+
+
+
+
+
+    butter16 = getFilterSpectrum(G, min(G.shape)/16, 'BHPF')
+    analyzeDFT2(butter16, iOperations=['scale','display'], iTitle='filter spectrum')
+
+    Gf16 = G * analyzeDFT2(butter16, iOperations=['center'])
+    gf16 = computeDFT2(Gf16, iDir='inverse')
+    displayImage(gf16.real, 'image')
+
+    butter4 = getFilterSpectrum(G, min(G.shape)/4, 'BHPF')
+    analyzeDFT2(butter4, iOperations=['scale','display'], iTitle='filter spectrum')
+
+    Gf4 = G * analyzeDFT2(butter4, iOperations=['center'])
+    gf4 = computeDFT2(Gf4, iDir='inverse')
+    displayImage(gf4.real, 'image')
+
+    butter3 = getFilterSpectrum(G, min(G.shape)/3, 'BHPF')
+    analyzeDFT2(butter3, iOperations=['scale','display'], iTitle='filter spectrum')
+
+    Gf3 = G * analyzeDFT2(butter3, iOperations=['center'])
+    gf3 = computeDFT2(Gf3, iDir='inverse')
+    displayImage(gf3.real, 'image')
+
+    butter16 = getFilterSpectrum(G, min(G.shape)/16, 'BLPF')
+    analyzeDFT2(butter16, iOperations=['scale','display'], iTitle='filter spectrum')
+
+    Gf16 = G * analyzeDFT2(butter16, iOperations=['center'])
+    gf16 = computeDFT2(Gf16, iDir='inverse')
+    displayImage(gf16.real, 'image')
+
+    butter4 = getFilterSpectrum(G, min(G.shape)/4, 'BLPF')
+    analyzeDFT2(butter4, iOperations=['scale','display'], iTitle='filter spectrum')
+
+    Gf4 = G * analyzeDFT2(butter4, iOperations=['center'])
+    gf4 = computeDFT2(Gf4, iDir='inverse')
+    displayImage(gf4.real, 'image')
+
+    butter3 = getFilterSpectrum(G, min(G.shape)/3, 'BLPF')
+    analyzeDFT2(butter3, iOperations=['scale','display'], iTitle='filter spectrum')
+
+    Gf3 = G * analyzeDFT2(butter3, iOperations=['center'])
+    gf3 = computeDFT2(Gf3, iDir='inverse')
+    displayImage(gf3.real, 'image')
