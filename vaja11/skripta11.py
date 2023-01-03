@@ -107,7 +107,7 @@ def blockMatching(iF1, iF2, iSize, iSearchSize):
 
     return oMF, oCP
 
-def displayMotionField(iMF, iCP, iTitle, iImage=None):
+def displayMotionField(iMF, iCP, iTitle, iImage=None, makeFig=False):
     """
     Funkcija za prikaz polja vektorjev premika
     """
@@ -130,6 +130,8 @@ def displayMotionField(iMF, iCP, iTitle, iImage=None):
         units="xy",
         angles="xy",
     )
+    if makeFig:
+        plt.close()
     return fig
 
 
@@ -140,14 +142,14 @@ def predictImage(iImage, iMF, iCP, iSize):
     Bx, By = iSize
     
     for n in range(yCP):
+        ymin = n * By
+        ymax = (n + 1) * By
         for m in range(xCP):
-            ymin = n * By
-            ymax = (n + 1) * By
             xmin = m * Bx
             xmax = (m + 1) * Bx
 
             oImage[int(ymin+iMF[n,m,1]):int(ymax+iMF[n,m,1]),int(xmin+iMF[n,m,0]):int(xmax+iMF[n,m,0])] = iImage[ymin:ymax,xmin:xmax]
-            
+
     return oImage
 
 
@@ -165,7 +167,7 @@ def motionFieldGIF(iPath, vLen, iSize,iSearchSize):
         frame1 = loadFrame(cap, iK = i)
         frame2 = loadFrame(cap, iK = i + 1)
         mf, cp = blockMatching(frame1, frame2, iSize=iSize, iSearchSize=iSearchSize)
-        oFrames.append(fig2img(displayMotionField(mf,cp,'Vektorji premika', iImage=frame1)))
+        oFrames.append(fig2img(displayMotionField(mf,cp,'Polje vektorjev premika, superponirano na sliko', iImage=frame1, makeFig=True)))
     return oFrames
 
 
@@ -178,12 +180,21 @@ if __name__ == '__main__':
     bSize = [8, 8]
     searchSize = 15 # 2**4-1
     mf, cp = blockMatching(frame30, frame31, iSize=bSize, iSearchSize=searchSize)
-    displayMotionField(mf, cp, 'Vektorji premika')
-    displayMotionField(mf, cp, 'Vektorji premika', iImage=frame30)
+    displayMotionField(mf, cp, 'Polje vektorjev premika')
+    displayMotionField(mf, cp, 'Polje vektorjev premika, superponirano na sliko', iImage=frame30)
+    
+
+
 
     # 1. naloga
     # Izračunajte napoved slike pri času t2 > t1 na podlagi slike pri času t1 ter
     # ter pripadajočo sliko razlik. Priložite programsko kodo in izirse obeh slik.
+
+    imagePredict = predictImage(frame30, mf, cp, bSize)
+    imageDiff = frame31 - imagePredict
+    displayImage(imagePredict, "Predicted image")
+    displayMotionField(mf,cp, 'Vektorji premika', iImage=imagePredict)
+    displayImage(imageDiff, "Razlika")
 
     # 2. naloga 
     # Sestavite video polja vektorjev premika za vsak par zaporednih slik danega videa
@@ -191,9 +202,9 @@ if __name__ == '__main__':
     # originalnega video posnetka.
     frames = motionFieldGIF('vaja11/data/simple-video.avi', 153, bSize, searchSize)
     frames[0].save(
-        "motionField.gif",
-        duration = 153 ,
-        loop =0 ,
+        "vaja11/data/motionField.gif",
+        duration = 40,
+        loop = 0 ,
         save_all = True ,
         optimize = False ,
         append_images = frames [1:] ,
@@ -206,6 +217,14 @@ if __name__ == '__main__':
     # AVI. Prilžite programsk kodo in izrise slik (polje vektorjev ter polje vektrojev 
     # premika, superponirano na sliko) za poljubno izbrani primer slik iz tega videa.
 
-    imagePredict = predictImage(frame30, mf, cp, bSize)
-    displayImage(imagePredict, "Predicted image")
-    displayMotionField(mf,cp, 'Vektorji premika', iImage=imagePredict)
+    capRealVideo = cv2.VideoCapture('vaja11/data/real-video.avi')
+    frame67 = loadFrame(capRealVideo, iK = 67)
+    frame68 = loadFrame(capRealVideo, iK = 68)
+    displayImage(frame67, "")
+    displayImage(frame68, "")
+    bSize = [6, 6]
+    searchSize = 7 
+    mf2, cp2 = blockMatching(frame67, frame68, iSize=bSize, iSearchSize=searchSize)
+    displayMotionField(mf2, cp2, "Polje vektorjev premika")
+    displayMotionField(mf2, cp2, "Polje vektorjev premika, superponirano na sliko", iImage=frame67)
+
