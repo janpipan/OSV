@@ -132,6 +132,25 @@ def displayMotionField(iMF, iCP, iTitle, iImage=None):
     )
     return fig
 
+
+def predictImage(iImage, iMF, iCP, iSize):
+
+    oImage = np.zeros(iImage.shape).astype(int)
+    yCP, xCP, zCp = iCP.shape
+    Bx, By = iSize
+    
+    for n in range(yCP):
+        for m in range(xCP):
+            ymin = n * By
+            ymax = (n + 1) * By
+            xmin = m * Bx
+            xmax = (m + 1) * Bx
+
+            oImage[int(ymin+iMF[n,m,1]):int(ymax+iMF[n,m,1]),int(xmin+iMF[n,m,0]):int(xmax+iMF[n,m,0])] = iImage[ymin:ymax,xmin:xmax]
+            
+    return oImage
+
+
 def fig2img(fig):
     buf = io.BytesIO()
     fig.savefig(buf)
@@ -139,6 +158,15 @@ def fig2img(fig):
     img = Image.open(buf)
     return img
 
+def motionFieldGIF(iPath, vLen, iSize,iSearchSize):
+    oFrames = []
+    cap = cv2.VideoCapture(iPath)
+    for i in range(vLen - 1):
+        frame1 = loadFrame(cap, iK = i)
+        frame2 = loadFrame(cap, iK = i + 1)
+        mf, cp = blockMatching(frame1, frame2, iSize=iSize, iSearchSize=iSearchSize)
+        oFrames.append(fig2img(displayMotionField(mf,cp,'Vektorji premika', iImage=frame1)))
+    return oFrames
 
 
 if __name__ == '__main__':
@@ -161,7 +189,16 @@ if __name__ == '__main__':
     # Sestavite video polja vektorjev premika za vsak par zaporednih slik danega videa
     # in ga shranite v datoteko tipa gif, tako da bo frekvenca novega videa enaka frekvenci
     # originalnega video posnetka.
+    frames = motionFieldGIF('vaja11/data/simple-video.avi', 153, bSize, searchSize)
+    frames[0].save(
+        "motionField.gif",
+        duration = 153 ,
+        loop =0 ,
+        save_all = True ,
+        optimize = False ,
+        append_images = frames [1:] ,
 
+    )
     # 3. naloga
     # Preizkusite delovanje algoritam bločnega ujemanja na realnem videu real-video.avi, ki 
     # je sestavljen iz K = 138 zaporednih sivinskih slik velikosti X x Y = 256 x 144 
@@ -169,4 +206,6 @@ if __name__ == '__main__':
     # AVI. Prilžite programsk kodo in izrise slik (polje vektorjev ter polje vektrojev 
     # premika, superponirano na sliko) za poljubno izbrani primer slik iz tega videa.
 
-
+    imagePredict = predictImage(frame30, mf, cp, bSize)
+    displayImage(imagePredict, "Predicted image")
+    displayMotionField(mf,cp, 'Vektorji premika', iImage=imagePredict)
