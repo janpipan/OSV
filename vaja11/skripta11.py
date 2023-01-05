@@ -140,16 +140,17 @@ def predictImage(iImage, iMF, iCP, iSize):
     oImage = np.zeros(iImage.shape).astype(int)
     yCP, xCP, zCp = iCP.shape
     Bx, By = iSize
-    
+
     for n in range(yCP):
-        ymin = n * By
-        ymax = (n + 1) * By
+        y_bounds = np.array([n * By, (n + 1) * By])
         for m in range(xCP):
-            xmin = m * Bx
-            xmax = (m + 1) * Bx
+            x_bounds = np.array([m * Bx, (m + 1) * Bx])
 
-            oImage[int(ymin+iMF[n,m,1]):int(ymax+iMF[n,m,1]),int(xmin+iMF[n,m,0]):int(xmax+iMF[n,m,0])] = iImage[ymin:ymax,xmin:xmax]
-
+            new_y_bounds = (y_bounds + iMF[n,m,1]).astype(int)
+            new_x_bounds = (x_bounds + iMF[n,m,0]).astype(int)
+          
+            oImage[new_y_bounds[0]:new_y_bounds[1],new_x_bounds[0]:new_x_bounds[1]] = iImage[y_bounds[0]:y_bounds[1],x_bounds[0]:x_bounds[1]]
+        
     return oImage
 
 
