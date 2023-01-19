@@ -56,7 +56,7 @@ def transformImage(iType, iImage, iDim, iP, iBgr=0, iInterp=0, startPoint='index
 
     Y, X = iImage.shape
 
-    xc, yc = X/2, Y/2
+    xc, yc = (X - 1) / 2, (Y - 1) / 2
 
     oImage = np.ones((Y,X), dtype=float) * iBgr
 
@@ -225,18 +225,19 @@ if __name__ == "__main__":
 
     XY = np.array([[0,0], [511,0], [0,511], [511,511], [63,63], [63,447], [447,63], [447,447]])
     UV = np.array([[0,0], [511,0], [0,511], [511,511], [127,95], [127,415], [383,95], [383,415]])
-    displayImage(image, 'Originalna slika Lene', iGridX=[0,511], iGridY=[0,511], points=True)
-    displayPoints(XY, "rx")
+    #displayImage(image, 'Originalna slika Lene', iGridX=[0,511], iGridY=[0,511], points=True)
+    
     radial_parameters = getParameters(iType='radial', orig_pts=XY, mapped_pts=UV)
     radial_lena = transformImage(iType='radial', iImage=image, iDim=pxDim, iP=radial_parameters, iBgr=63, iInterp=1)
     displayImage(radial_lena, 'Lena radialna preslikava', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(UV, "bo")
-
-    displayImage(image_grid, 'Orignialna grid slika', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(XY, "rx")
+    
+    
     radial_lena = transformImage(iType='radial', iImage=image_grid, iDim=pxDim, iP=radial_parameters, iBgr=63, iInterp=1)
     displayImage(radial_lena, 'Grid radialna preslikava', iGridX=[0,511], iGridY=[0,511], points=True)
     displayPoints(UV, "bo")
+    displayPoints(XY, "rx")
 
     print("Ali glede na položaj točk preslikava deluje pravilno? Obrazložite odgovor.")
 

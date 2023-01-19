@@ -74,7 +74,7 @@ def getPlannarProjection(iImage, iDim, iNormVec, iFunc):
         oP = np.zeros(iImage.shape)
 
         # center points of old picture
-        y_center, x_center = Y / 2, X / 2
+        y_center, x_center = (Y - 1) / 2, (X - 1) / 2
         """ for z in range(Z):
             for y in range(Y):
                 for x in range(X):

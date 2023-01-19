@@ -1,0 +1,150 @@
+# Vaja 1
+loadImage(iPath, iSize, iType)
+    return image
+    image = loadImage("./vaja2/data/valley-1024x683-08bit.raw", (1024,683), np.uint8)
+
+
+# Vaja 2 ----------------------------------------
+computeHistogram(iImage)
+    return oHist, oProb, oCDF, oLevels
+
+equalizedHistogram(iImage)
+    return oImage
+
+equalizedHistogramDecimal(iImage)   
+    return oImage
+
+computeEntropy(iImage)
+    return oEntropy 
+----------------------------------------
+
+# Vaja 3 ----------------------------------------
+interpolateImage(iImage, iSize, iOrder) #order 0 ali 1
+    return oImage
+
+displayImage(iImage, iTitle, iGridX=None, iGridY=None, points=None)
+
+
+# Vaja 4
+loadImage3D(iPath, iSize, iType)
+    return oImage
+
+getPlanarCrossSection(iImage, iDim, iNormVec, iLoc)
+    return oCS, oH, oV
+    xI, xH, xV = getPlanarCrossSection(I, iDim=vxDim, iNormVec=[1,0,0], iLoc=256)
+
+getPlannarProjection(iImage, iDim, iNormVec, iFunc)
+    return oP, oH, oV
+    PxI, PxH, PxV = getPlannarProjection(I, iDim=vxDim, iNormVec=[1,0,0],iFunc=func)
+----------------------------------------
+
+# Vaja 5 ----------------------------------------
+scaleImage(iImage, iA, iB)
+    return oImage
+    sI = scaleImage(image, iA=-0.125,iB=256)
+
+windowImage(iImage, iC, iW)
+    return oImage
+    wI = windowImage(sI, iC=1000, iW=500)
+
+sectionalScaleImage(iImage, iS, oS)
+    return oImage
+    s_vhd = [0,85,170,255]
+    s_izh = [85,0,255,170]
+    ssI = sectionalScaleImage(wI, iS=s_vhd, oS=s_izh)
+
+gammaImage(iImage, iG)
+    return oImage
+    gI = gammaImage(wI, 0.5)
+
+thresholdImage(iImage, iT)
+    return oImage
+    tI = thresholdImage(wI,127)
+
+threshRange(iImage)
+    return values, oLevels
+    val, l = threshRange(wI)
+
+nonLinearSectionalScaleImage(iImage, iS, oS)
+    return oImage, coefficients
+    s_vhd = [0,40,80,127,167,207,255]
+    s_izh = [0,255,80,20,167,240,255]
+    nLI, coefficients = nonLinearSectionalScaleImage(wI,s_vhd,s_izh)
+----------------------------------------
+
+# Vaja 6 ----------------------------------------
+getRadialValue(iXY, iCP)
+    return oValue
+    U = getRadialValue(pt, iP['pts'])
+
+getParameters(iType, **kwargs) # iType = 'affine', 'radial'; kwargs
+    return oP
+    affine = getParameters(iType='affine', rot=0, scale=[1,0.8], trans=[0,0], shear=[0.5,0])
+
+transformImage(iType, iImage, iDim, iP, iBgr=0, iInterp=0, startPoint='index')
+    return oImage
+    transform_grid_inter0 = transformImage(iType='affine',iImage=image_grid, iDim=pxDim, iP=np.linalg.inv(affine), iBgr=63)
+
+displayPoints(iXY, iMarker)
+    displayPoints(UV, "bo")
+----------------------------------------
+
+# Vaja 7 ----------------------------------------
+changeSpatialDomain(iType, iImage, iX, iY, iMode=None, iBgr=0)
+    return oImage
+    constantSpatialDomain = changeSpatialDomain(iType='enlarge', iImage=image, iX=128, iY=384, iMode='constant', iBgr=127)
+
+spatialFiltering(iType, iImage, iFilter, iStatFunc=None, iMorphOp=None, kernelMode=None)
+    return oImage
+    kI = spatialFiltering(iType='kernel', iImage=image, iFilter=K)
+
+weightedAverageFilter(iM, iN, iValue)
+    return oFilter
+    weightedAverageFilter(5,7,2)
+
+sharpenImage(iImage, filter, c)
+    return oImage, oMaskRange
+    sharpImage, sharpenMask = sharpenImage(image,gaussianFilter,2)
+----------------------------------------
+
+# Vaja 8 ----------------------------------------
+getCenterPoint(iImage, iRadius)
+    return oCenter, oAcc
+
+----------------------------------------
+
+# Vaja 9 ----------------------------------------
+exhaustiveRegistration(iImageA, iImageB, iTx, iTy)
+    return oMap, oTx, oTy
+
+----------------------------------------
+
+# Vaja 10 ----------------------------------------
+computeDFT2(iMatrix, iDir='forward')
+    return oMatrix
+
+analyzeDFT2(iMatrix, iOperations, iTitle="")
+    return oMatrix
+
+getfiletrSpectrum(iMatrix, iD0, iType)
+    return oMatrix
+
+----------------------------------------
+
+# Vaja 11 ----------------------------------------
+framePrediction(iF, iMV)
+    return oF
+
+blockMatchin(iF1, iF2, iSize, iSearchSize)
+    return oMF, oCP
+
+predictImage(iImage, iMF, iCP, iSize)
+    return oImage
+
+fig2img(fig)
+    return img
+
+motionFieldGIF(iPath, vLen, iSize, iSearhcSize)
+    return oFrames
+
+----------------------------------------
